@@ -10,7 +10,7 @@
 #include "ViveOpenXRWristTrackerFunctionLibrary.generated.h"
 
 UCLASS(ClassGroup = OpenXR)
-class UViveOpenXRWristTrackerFunctionLibrary : public UBlueprintFunctionLibrary
+class VIVEOPENXRWRISTTRACKER_API UViveOpenXRWristTrackerFunctionLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 

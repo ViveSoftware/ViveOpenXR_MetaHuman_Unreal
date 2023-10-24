@@ -31,19 +31,6 @@ DEFINE_LOG_CATEGORY(LogViveOpenXRWristTracker);
 
 FViveOpenXRWristTracker* FViveOpenXRWristTracker::m_Instance = nullptr;
 
-FORCEINLINE XrPath GetPath(XrInstance Instance, const char* PathString)
-{
-	XrPath Path = XR_NULL_PATH;
-	XrResult Result = xrStringToPath(Instance, PathString, &Path);
-	check(XR_SUCCEEDED(Result));
-	return Path;
-}
-
-FORCEINLINE XrPath GetPath(XrInstance Instance, const FString& PathString)
-{
-	return GetPath(Instance, (ANSICHAR*)StringCast<ANSICHAR>(*PathString).Get());
-}
-
 FViveOpenXRWristTracker::FViveWristTracker::FViveWristTracker()
 	: RolePath(XR_NULL_PATH)
 	, PoseAction(XR_NULL_HANDLE)
@@ -65,12 +52,12 @@ FViveOpenXRWristTracker::FViveWristTracker::FViveWristTracker()
 	MenuInputActions.Empty();
 }
 
-void FViveOpenXRWristTracker::FViveWristTracker::SetupPath(XrPath InRolePath, XrPath InPoseActionPath, XrPath InPrimaryActionPath, XrPath InMenuActionPath)
+void FViveOpenXRWristTracker::FViveWristTracker::SetupPath(FString InRolePath, FString InPoseActionPath, FString InPrimaryActionPath, FString InMenuActionPath)
 {
-	RolePath = InRolePath;
-	PoseActionPath = InPoseActionPath;
-	PrimaryActionPath = InPrimaryActionPath;
-	MenuActionPath = InMenuActionPath;
+	RolePath = FOpenXRPath(InRolePath);
+	PoseActionPath = FOpenXRPath(InPoseActionPath);
+	PrimaryActionPath = FOpenXRPath(InPrimaryActionPath);
+	MenuActionPath = FOpenXRPath(InMenuActionPath);
 	SubactionPaths.Reset();
 	SubactionPaths.Emplace(RolePath);
 }
@@ -79,7 +66,7 @@ int32 FViveOpenXRWristTracker::FViveWristTracker::AddTrackedDevices(FOpenXRHMD* 
 {
 	if (HMD)
 	{
-		DeviceId = HMD->AddActionDevice(PoseAction, PoseActionPath);
+		DeviceId = HMD->AddTrackedDevice(PoseAction, PoseActionPath);
 		//UE_LOG(LogViveOpenXRWristTracker, Log, TEXT("AddTrackedDevices ID: %d"), DeviceId);
 	}
 	return DeviceId;
@@ -92,7 +79,7 @@ void FViveOpenXRWristTracker::FViveWristTracker::GetSuggestedBindings(TArray<XrA
 	OutSuggestedBindings.Add(XrActionSuggestedBinding{ MenuAction, MenuActionPath });
 }
 
-void FViveOpenXRWristTracker::FViveWristTracker::AddAction(XrInstance InInstance, XrActionSet& InActionSet, XrAction& OutAction, XrPath InBindingPath, XrActionType InActionType)//, const TArray<XrPath>& InSubactionPaths)
+void FViveOpenXRWristTracker::FViveWristTracker::AddAction(XrActionSet& InActionSet, XrAction& OutAction, FOpenXRPath InBindingPath, XrActionType InActionType)//, const TArray<XrPath>& InSubactionPaths)
 {
 	check(InActionSet != XR_NULL_HANDLE);
 	if (OutAction != XR_NULL_HANDLE) {
@@ -100,10 +87,10 @@ void FViveOpenXRWristTracker::FViveWristTracker::AddAction(XrInstance InInstance
 		OutAction = XR_NULL_HANDLE;
 	}
 
-	//UE_LOG(LogViveOpenXRWristTracker, Log, TEXT("xrCreateAction %s"), *InBindingPath.ToString());
+	UE_LOG(LogViveOpenXRWristTracker, Log, TEXT("xrCreateAction %s"), *InBindingPath.ToString());
 
 	char ActionName[NAME_SIZE];
-	GetActionName(InInstance, InBindingPath).GetPlainANSIString(ActionName);
+	GetActionName(InBindingPath).GetPlainANSIString(ActionName);
 
 	XrActionCreateInfo Info;
 	Info.type = XR_TYPE_ACTION_CREATE_INFO;
@@ -117,19 +104,17 @@ void FViveOpenXRWristTracker::FViveWristTracker::AddAction(XrInstance InInstance
 
 }
 
-void FViveOpenXRWristTracker::FViveWristTracker::AddActions(XrInstance InInstance, XrActionSet& InActionSet)
+void FViveOpenXRWristTracker::FViveWristTracker::AddActions(XrActionSet& InActionSet)
 {
-	AddAction(InInstance, InActionSet, PoseAction, PoseActionPath, XR_ACTION_TYPE_POSE_INPUT);
-	AddAction(InInstance, InActionSet, PrimaryAction, PrimaryActionPath, XR_ACTION_TYPE_BOOLEAN_INPUT);
-	AddAction(InInstance, InActionSet, MenuAction, MenuActionPath, XR_ACTION_TYPE_BOOLEAN_INPUT);
+	AddAction(InActionSet, PoseAction, PoseActionPath, XR_ACTION_TYPE_POSE_INPUT);
+	AddAction(InActionSet, PrimaryAction, PrimaryActionPath, XR_ACTION_TYPE_BOOLEAN_INPUT);
+	AddAction(InActionSet, MenuAction, MenuActionPath, XR_ACTION_TYPE_BOOLEAN_INPUT);
 }
 
-FName FViveOpenXRWristTracker::FViveWristTracker::GetActionName(XrInstance InInstance, XrPath ActionPath)
+FName FViveOpenXRWristTracker::FViveWristTracker::GetActionName(FOpenXRPath ActionPath)
 {
 	TArray<FString> Tokens;
-	FString ActionPathString;
-	OpenXRPathToFString(InInstance, ActionPath, ActionPathString);
-	ActionPathString.ParseIntoArray(Tokens, TEXT("/"));
+	ActionPath.ToString().ParseIntoArray(Tokens, TEXT("/"));
 	Tokens[4].RemoveFromEnd("_htc");
 	FString ActionNameString = Tokens[2] + "_" + Tokens[4] + "_" + Tokens[5];
 	//UE_LOG(LogViveOpenXRWristTracker, Log, TEXT("GetActionName %s"), *ActionNameString);
@@ -281,19 +266,9 @@ const void* FViveOpenXRWristTracker::OnCreateSession(XrInstance InInstance, XrSy
 		RightWristTracker.PrimaryKey = WristTrackerKeys::WristTracker_Right_A_Click;
 		RightWristTracker.MenuKey = WristTrackerKeys::WristTracker_Right_System_Click;
 
-		// XrPath
-		XrPath LeftRolePath = GetPath(Instance, WristTrackerRolePath::Left);
-		XrPath RightRolePath = GetPath(Instance, WristTrackerRolePath::Right);
-		XrPath LeftPosePath = GetPath(Instance, WristTrackerActionPath::LeftPose);
-		XrPath RightPosePath = GetPath(Instance, WristTrackerActionPath::RightPose);
-		XrPath LeftPrimaryPath = GetPath(Instance, WristTrackerActionPath::LeftPrimary);
-		XrPath RightPrimaryPath = GetPath(Instance, WristTrackerActionPath::RightPrimary);
-		XrPath LeftMenuPath = GetPath(Instance, WristTrackerActionPath::LeftMenu);
-		XrPath RightMenuPath = GetPath(Instance, WristTrackerActionPath::RightMenu);
-
 		// Setup XrPath (include SubActionPaths)
-		LeftWristTracker.SetupPath(LeftRolePath, LeftPosePath, LeftPrimaryPath, LeftMenuPath);
-		RightWristTracker.SetupPath(RightRolePath, RightPosePath, RightPrimaryPath, RightMenuPath);
+		LeftWristTracker.SetupPath(WristTrackerRolePath::Left, WristTrackerActionPath::LeftPose, WristTrackerActionPath::LeftPrimary, WristTrackerActionPath::LeftMenu);
+		RightWristTracker.SetupPath(WristTrackerRolePath::Right, WristTrackerActionPath::RightPose, WristTrackerActionPath::RightPrimary, WristTrackerActionPath::RightMenu);
 
 		//	Create ActionSet
 		if (WristTrackerActionSet != XR_NULL_HANDLE)
@@ -312,8 +287,8 @@ const void* FViveOpenXRWristTracker::OnCreateSession(XrInstance InInstance, XrSy
 		}
 		
 		// Create Action
-		LeftWristTracker.AddActions(Instance, WristTrackerActionSet);
-		RightWristTracker.AddActions(Instance, WristTrackerActionSet);
+		LeftWristTracker.AddActions(WristTrackerActionSet);
+		RightWristTracker.AddActions(WristTrackerActionSet);
 
 		// Create suggested bindings
 		UE_LOG(LogViveOpenXRWristTracker, Log, TEXT("xrSuggestInteractionProfileBindings()"));
@@ -321,7 +296,7 @@ const void* FViveOpenXRWristTracker::OnCreateSession(XrInstance InInstance, XrSy
 		LeftWristTracker.GetSuggestedBindings(Bindings);
 		RightWristTracker.GetSuggestedBindings(Bindings);
 		XrInteractionProfileSuggestedBinding InteractionProfileSuggestedBindings{ XR_TYPE_INTERACTION_PROFILE_SUGGESTED_BINDING };
-		InteractionProfileSuggestedBindings.interactionProfile = GetPath(Instance, "/interaction_profiles/htc/vive_wrist_tracker");
+		InteractionProfileSuggestedBindings.interactionProfile = FOpenXRPath("/interaction_profiles/htc/vive_wrist_tracker");
 		InteractionProfileSuggestedBindings.suggestedBindings = Bindings.GetData();
 		InteractionProfileSuggestedBindings.countSuggestedBindings = Bindings.Num();
 		XR_ENSURE(xrSuggestInteractionProfileBindings(Instance, &InteractionProfileSuggestedBindings));

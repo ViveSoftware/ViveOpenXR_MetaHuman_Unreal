@@ -7,7 +7,7 @@
 #include "ViveOpenXRAndroidHandInteractionBP.generated.h"
 
 UCLASS()
-class UViveOpenXRAndroidHandInteractionBP : public UBlueprintFunctionLibrary
+class VIVEOPENXRHANDINTERACTION_API UViveOpenXRAndroidHandInteractionBP : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 

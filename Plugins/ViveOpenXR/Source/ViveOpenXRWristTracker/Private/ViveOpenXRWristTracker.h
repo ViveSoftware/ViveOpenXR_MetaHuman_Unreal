@@ -90,12 +90,12 @@ public:
 
 		FViveWristTracker();
 
-		void SetupPath(XrPath InRolePath, XrPath InPoseActionPath, XrPath InPrimaryActionPath, XrPath InMenuActionPath);
+		void SetupPath(FString InRolePath, FString InPoseActionPath, FString InPrimaryActionPath, FString InMenuActionPath);
 		int32 AddTrackedDevices(class FOpenXRHMD* HMD);
 		void GetSuggestedBindings(TArray<XrActionSuggestedBinding>& OutSuggestedBindings);
-		void AddAction(XrInstance InInstance, XrActionSet& InActionSet, XrAction& OutAction, XrPath InBindingPath, XrActionType InActionType);
-		void AddActions(XrInstance InInstance, XrActionSet& InActionSet);
-		FName GetActionName(XrInstance InInstance, XrPath ActionPath);
+		void AddAction(XrActionSet& InActionSet, XrAction& OutAction, FOpenXRPath InBindingPath, XrActionType InActionType);
+		void AddActions(XrActionSet& InActionSet);
+		FName GetActionName(FOpenXRPath ActionPath);
 		void SyncActionStates(XrSession InSession);
 		void CheckAndAddEnhancedInputAction(FEnhancedActionKeyMapping EnhancedActionKeyMapping);
 	};

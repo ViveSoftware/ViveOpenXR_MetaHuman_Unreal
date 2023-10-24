@@ -10,7 +10,7 @@
 	"DocsURL": "https://developer.vive.com/resources/openxr/openxr-pcvr/documentation/",
 	"MarketplaceURL": "",
 	"SupportURL": "",
-	"EngineVersion": "5.1.0",
+	"EngineVersion": "5.2.0",
 	"EnabledByDefault": false,
 	"CanContainContent": true,
 	"Installed": true,

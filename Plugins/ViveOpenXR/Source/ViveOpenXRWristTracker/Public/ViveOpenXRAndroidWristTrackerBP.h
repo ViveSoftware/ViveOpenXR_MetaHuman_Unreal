@@ -10,7 +10,7 @@
 #include "ViveOpenXRAndroidWristTrackerBP.generated.h"
 
 UCLASS()
-class UViveOpenXRAndroidWristTrackerBP : public UBlueprintFunctionLibrary
+class VIVEOPENXRWRISTTRACKER_API UViveOpenXRAndroidWristTrackerBP : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 

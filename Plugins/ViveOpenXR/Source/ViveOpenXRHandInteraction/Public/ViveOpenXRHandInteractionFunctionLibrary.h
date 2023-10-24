@@ -7,7 +7,7 @@
 
 
 UCLASS(ClassGroup = OpenXR)
-class UViveOpenXRHandInteractionFunctionLibrary : public UBlueprintFunctionLibrary
+class VIVEOPENXRHANDINTERACTION_API UViveOpenXRHandInteractionFunctionLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_UCLASS_BODY()
 

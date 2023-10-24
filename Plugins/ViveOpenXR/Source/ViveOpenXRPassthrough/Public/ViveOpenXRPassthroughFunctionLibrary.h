@@ -10,7 +10,7 @@
 
 
 UCLASS(ClassGroup = OpenXR)
-class UViveOpenXRPassthroughFunctionLibrary : public UBlueprintFunctionLibrary
+class VIVEOPENXRPASSTHROUGH_API UViveOpenXRPassthroughFunctionLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 
