@@ -1,0 +1,16 @@
+#/Binaries
+/Binaries/Android
+/DerivedDataCache
+/Intermediate
+/Saved
+*.sln
+*.sdf
+*.suo
+*.VC.VC.opendb
+*.VC.db
+#*.target
+/Build
+/.vs
+/Pac
+
+
