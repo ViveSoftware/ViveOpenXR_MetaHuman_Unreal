@@ -1,7 +1,6 @@
 // Copyright (c) 2022 HTC Corporation. All Rights Reserved.
 
 #pragma once
-#include "CoreUObject/Public/UObject/Class.h"
 #include <stdint.h>
 #include "ViveFacialExpressionEnums.generated.h"
 

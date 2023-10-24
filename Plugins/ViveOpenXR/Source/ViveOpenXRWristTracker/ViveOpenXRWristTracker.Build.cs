@@ -31,8 +31,9 @@ namespace UnrealBuildTool.Rules
                     "HeadMountedDisplay",
                     "UMG",
                     "OpenXRHMD",
-					"OpenXRInput"
-				}
+					"OpenXRInput",
+                    "XRBase"
+                }
 				);
 
             PublicDependencyModuleNames.Add("EnhancedInput");

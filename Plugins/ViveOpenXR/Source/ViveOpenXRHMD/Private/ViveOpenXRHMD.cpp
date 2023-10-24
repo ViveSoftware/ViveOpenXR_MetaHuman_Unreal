@@ -87,7 +87,7 @@ bool FViveOpenXRHMD::GetSpectatorScreenController(FHeadMountedDisplayBase* InHMD
 	OutSpectatorScreenController = nullptr;
 	return true;
 #else
-	OutSpectatorScreenController = MakeUnique<FDefaultSpectatorScreenController>(InHMDBase);
+	//OutSpectatorScreenController = MakeUnique<FDefaultSpectatorScreenController>(InHMDBase);
 	return false;
 #endif
 }
@@ -168,7 +168,7 @@ const void* FViveOpenXRHMD::OnEndProjectionLayer(XrSession InSession, int32 InLa
 	return InNext;
 }
 
-const void* FViveOpenXRHMD::OnEndFrame(XrSession InSession, XrTime DisplayTime, const TArray<XrSwapchainSubImage> InColorImages, const TArray<XrSwapchainSubImage> InDepthImages, const void* InNext)
+const void* FViveOpenXRHMD::OnEndFrame(XrSession InSession, XrTime DisplayTime, const void* InNext)
 {
 	//UE_LOG(LogViveOpenXRHMD, Log, TEXT("Vive OpenXR OnEndFrame"));
 	return InNext;

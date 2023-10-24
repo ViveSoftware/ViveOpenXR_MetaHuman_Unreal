@@ -199,6 +199,7 @@ void FViveOpenXRWristTracker::AttachActionSets(TSet<XrActionSet>& OutActionSets)
 	RightWristTracker.AddTrackedDevices(OpenXRHMD);
 	OutActionSets.Add(WristTrackerActionSet);
 
+	PRAGMA_DISABLE_DEPRECATION_WARNINGS
 	// For enhanced input
 	if (!MappableInputConfig)
 	{
@@ -229,6 +230,7 @@ void FViveOpenXRWristTracker::AttachActionSets(TSet<XrActionSet>& OutActionSets)
 		KeyActionStates.Emplace(WristTrackerKeys::WristTracker_Left_Menu_Click.GetFName(), &LeftWristTracker.MenuActionState);
 		KeyActionStates.Emplace(WristTrackerKeys::WristTracker_Right_System_Click.GetFName(), &RightWristTracker.MenuActionState);
 	}
+	PRAGMA_ENABLE_DEPRECATION_WARNINGS
 
 	bActionsAttached = true;
 }
@@ -368,6 +370,14 @@ bool FViveOpenXRWristTracker::GetControllerOrientationAndPosition(const int32 Co
 	return false;
 }
 
+bool FViveOpenXRWristTracker::GetControllerOrientationAndPosition(const int32 ControllerIndex, const FName MotionSource, FRotator& OutOrientation, FVector& OutPosition, bool& OutbProvidedLinearVelocity, FVector& OutLinearVelocity, bool& OutbProvidedAngularVelocity, FVector& OutAngularVelocityAsAxisAndLength, bool& OutbProvidedLinearAcceleration, FVector& OutLinearAcceleration, float WorldToMetersScale) const
+{
+	// FTimespan initializes to 0 and GetControllerOrientationAndPositionForTime with time 0 will return the latest data.
+	FTimespan Time;
+	bool OutTimeWasUsed = false;
+	return GetControllerOrientationAndPositionForTime(ControllerIndex, MotionSource, Time, OutTimeWasUsed, OutOrientation, OutPosition, OutbProvidedLinearVelocity, OutLinearVelocity, OutbProvidedAngularVelocity, OutAngularVelocityAsAxisAndLength, OutbProvidedLinearAcceleration, OutLinearAcceleration, WorldToMetersScale);
+}
+
 bool FViveOpenXRWristTracker::GetControllerOrientationAndPositionForTime(const int32 ControllerIndex, const FName MotionSource, FTimespan Time, bool& OutTimeWasUsed, FRotator& OutOrientation, FVector& OutPosition, bool& OutbProvidedLinearVelocity, FVector& OutLinearVelocity, bool& OutbProvidedAngularVelocity, FVector& OutAngularVelocityRadPerSec, bool& OutbProvidedLinearAcceleration, FVector& OutLinearAcceleration, float WorldToMetersScale) const
 {
 	if (!bActionsAttached || OpenXRHMD == nullptr)
@@ -446,6 +456,7 @@ void FViveOpenXRWristTracker::EnumerateSources(TArray<FMotionControllerSource>& 
 	SourcesOut.Add(FMotionControllerSource(WristTrackerMotionSource::Right));
 }
 
+PRAGMA_DISABLE_DEPRECATION_WARNINGS
 bool FViveOpenXRWristTracker::SetPlayerMappableInputConfig(TObjectPtr<class UPlayerMappableInputConfig> InputConfig)
 {
 	if (bActionsAttached)
@@ -458,6 +469,7 @@ bool FViveOpenXRWristTracker::SetPlayerMappableInputConfig(TObjectPtr<class UPla
 	MappableInputConfig = TStrongObjectPtr<class UPlayerMappableInputConfig>(InputConfig);
 	return true;
 }
+PRAGMA_ENABLE_DEPRECATION_WARNINGS
 
 void FViveOpenXRWristTracker::SendInputEvent_Legacy()
 {

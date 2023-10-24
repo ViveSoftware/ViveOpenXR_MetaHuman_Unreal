@@ -2,7 +2,7 @@
 
 using System;
 using System.IO;
-using EpicGames.Core; //Log
+using Microsoft.Extensions.Logging;
 
 namespace UnrealBuildTool.Rules
 {
@@ -10,8 +10,8 @@ namespace UnrealBuildTool.Rules
 	{
 		public ViveOpenXRHMD(ReadOnlyTargetRules Target) : base(Target)
 		{
-			Log.TraceInformation("Execute ViveOpenXRHMD.Build.cs");
-			PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+            Logger.LogInformation("Execute ViveOpenXRHMD.Build.cs");
+            PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
             var EngineDir = Path.GetFullPath(Target.RelativeEnginePath);
 

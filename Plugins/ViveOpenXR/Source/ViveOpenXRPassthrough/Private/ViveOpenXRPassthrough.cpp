@@ -1,10 +1,6 @@
 // Copyright (c) 2022 HTC Corporation. All Rights Reserved.
 
-
 #include "ViveOpenXRPassthrough.h"
-#include <OpenXRHMD/Private/OpenXRHMD.h>
-
-//#include "ViveOpenXRExtensionPluginDefinition.h"
 
 DEFINE_LOG_CATEGORY(LogViveOpenXRPassthrough);
 

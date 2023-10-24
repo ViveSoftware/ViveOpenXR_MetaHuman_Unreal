@@ -52,7 +52,7 @@ public:
 	virtual const void* OnBeginProjectionView(XrSession InSession, int32 InLayerIndex, int32 InViewIndex, const void* InNext) override;
 	virtual const void* OnBeginDepthInfo(XrSession InSession, int32 InLayerIndex, int32 InViewIndex, const void* InNext) override;
 	virtual const void* OnEndProjectionLayer(XrSession InSession, int32 InLayerIndex, const void* InNext, XrCompositionLayerFlags& OutFlags) override;
-	virtual const void* OnEndFrame(XrSession InSession, XrTime DisplayTime, const TArray<XrSwapchainSubImage> InColorImages, const TArray<XrSwapchainSubImage> InDepthImages, const void* InNext) override;
+	virtual const void* OnEndFrame(XrSession InSession, XrTime DisplayTime, const void* InNext) override;
 	virtual const void* OnSyncActions(XrSession InSession, const void* InNext) override;
 	virtual void PostSyncActions(XrSession InSession) override;
 

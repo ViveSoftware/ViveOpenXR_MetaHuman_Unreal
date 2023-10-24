@@ -15,6 +15,10 @@ namespace UnrealBuildTool.Rules
 
             PrivatePCHHeaderFile = @"Private\OpenXRCommon.h";
 
+            // Get the engine path. Ends with "Engine/"
+            string engine_path = Path.GetFullPath(Target.RelativeEnginePath);
+            string srcrt_path = engine_path + "Source/Runtime/";
+
             PublicDependencyModuleNames.AddRange(
 			   new string[]
 			   {
@@ -24,7 +28,8 @@ namespace UnrealBuildTool.Rules
 
             PrivateIncludePaths.AddRange(
                 new string[] {
-                    "ViveOpenXRPassthrough/Private/External"
+                    "ViveOpenXRPassthrough/Private/External",
+                    engine_path + "Plugins/Runtime/OpenXR/Source/OpenXRHMD/Private/"
                 }
                 );
 

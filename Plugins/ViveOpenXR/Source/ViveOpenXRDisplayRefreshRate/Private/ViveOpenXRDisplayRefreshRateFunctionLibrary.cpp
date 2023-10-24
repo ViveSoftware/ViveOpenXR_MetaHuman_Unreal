@@ -3,7 +3,7 @@
 
 #include "ViveOpenXRDisplayRefreshRateFunctionLibrary.h"
 #include "ViveOpenXRDisplayRefreshRateModule.h"
-#include <OpenXRHMD/Private/OpenXRHMD.h>
+#include "OpenXRHMD.h"
 
 static FViveOpenXRDisplayRefreshRate* FViveOpenXRDisplayRefreshRatePtr = nullptr;
 

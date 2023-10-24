@@ -2,7 +2,7 @@
 
 #include "ViveOpenXRPassthroughFunctionLibrary.h"
 #include "ViveOpenXRPassthrough.h"
-#include <OpenXRHMD/Private/OpenXRHMD.h>
+#include "OpenXRHMD.h"
 
 static FViveOpenXRPassthrough* FViveOpenXRPassthroughPtr = nullptr;
 

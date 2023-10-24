@@ -2,8 +2,8 @@
 
 #include "ViveRenderDoc.h"
 
-#include "VulkanRHIBridge.h"
-#include "VulkanPlatformDefines.h"
+#include "IVulkanDynamicRHI.h"
+//#include "VulkanPlatformDefines.h"
 #include "VulkanPlatform.h"
 #include "VulkanRHIPrivate.h"
 #include "VulkanContext.h"

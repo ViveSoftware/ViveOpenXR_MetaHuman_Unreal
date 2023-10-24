@@ -1,6 +1,7 @@
 // Copyright (c) 2023 HTC Corporation. All Rights Reserved.
 
 using UnrealBuildTool;
+using System.IO;
 
 namespace UnrealBuildTool.Rules
 {
@@ -9,7 +10,15 @@ namespace UnrealBuildTool.Rules
 
 		public ViveOpenXRDisplayRefreshRate(ReadOnlyTargetRules Target) : base(Target)
 		{
-			PrivateDependencyModuleNames.AddRange(
+            var EngineDir = Path.GetFullPath(Target.RelativeEnginePath);
+            PrivateIncludePaths.AddRange(
+                new string[] {
+                    EngineDir + "/Source/ThirdParty/OpenXR/include",
+                    EngineDir + "/Plugins/Runtime/OpenXR/Source/OpenXRHMD/Private",
+                }
+                );
+
+            PrivateDependencyModuleNames.AddRange(
 				new string[]
 				{
 					"Core",

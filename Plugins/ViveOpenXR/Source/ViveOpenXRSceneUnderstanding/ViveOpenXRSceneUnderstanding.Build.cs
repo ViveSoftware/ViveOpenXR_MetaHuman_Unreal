@@ -2,6 +2,7 @@
 
 using UnrealBuildTool;
 using EpicGames.Core;
+using Microsoft.Extensions.Logging;
 
 public class ViveOpenXRSceneUnderstanding : ModuleRules
 {
@@ -68,10 +69,11 @@ public class ViveOpenXRSceneUnderstanding : ModuleRules
             string SettingsSection = "/Script/ViveOpenXRRuntimeSettings.ViveOpenXRRuntimeSettings";
             Ini.GetBool(SettingsSection, "bEnableSceneUnderstanding", out bEnableSceneUnderstanding);
 
-            Log.TraceInformation("Enable Scene Understanding: {0}", bEnableSceneUnderstanding);
+            Logger.LogInformation("Enable Scene Understanding: {0}", bEnableSceneUnderstanding);
+
 			if (bEnableSceneUnderstanding)
 			{
-				Log.TraceWarning("Vive OpenXR Scene Understanding is not supported on Vive AIO devices.");
+                Logger.LogInformation("Vive OpenXR Scene Understanding is not supported on Vive AIO devices.");
 			}
         }
     }

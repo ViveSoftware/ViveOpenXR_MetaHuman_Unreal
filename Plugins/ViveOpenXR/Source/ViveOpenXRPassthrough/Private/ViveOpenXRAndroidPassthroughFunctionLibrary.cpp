@@ -2,7 +2,6 @@
 
 #include "ViveOpenXRAndroidPassthroughFunctionLibrary.h"
 #include "ViveOpenXRPassthrough.h"
-#include <OpenXRHMD/Private/OpenXRHMD.h>
 
 
 void UViveOpenXRAndroidPassthroughFunctionLibrary::GetIsPassthroughEnabled(bool& result)
